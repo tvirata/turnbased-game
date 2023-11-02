@@ -11,6 +11,7 @@ body {
     width: 150px;
     border: solid;
     background-color: #d5d7ff;
+    cursor: pointer;
 }
 
 .row {
@@ -46,4 +47,45 @@ h2 {
 .o {
     font-size: 100px;
     color: red;
+}
+
+#roundMenu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+select,
+input,
+#startBtn {
+    appearance: none;
+    border: 2;
+    outline: 0;
+    font: inherit;
+    width: 250px;
+    padding: 1rem 4rem 1rem 1rem;
+    background: rgb(64, 37, 235);
+    color: white;
+    border-radius: 0.25em;
+    box-shadow: 0 0 1em 0 rgba(248, 248, 248, 0.2);
+    margin-bottom: 2rem;
+}
+
+select {
+    width: 333px;
+    cursor: pointer;
+}
+
+
+option {
+    color: white;
+    background-color: rgb(4, 0, 41);
+}
+
+#startBtn {
+    width: 200px;
+    background: rgb(0, 0, 0);
+    margin-top: 2rem;
+    cursor: pointer;
 }
