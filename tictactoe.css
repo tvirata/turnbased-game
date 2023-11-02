@@ -1,5 +1,5 @@
 body {
-    font-family:'Courier New', Courier, monospace;
+    font-family: 'Courier New', Courier, monospace;
     background-color: rgb(4, 0, 41);
 }
 
@@ -31,8 +31,8 @@ h2 {
 }
 
 
-.board {
-    margin-top: 5%;
+#board {
+    margin-bottom: 5%;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
