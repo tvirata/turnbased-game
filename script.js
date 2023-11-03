@@ -27,10 +27,9 @@ function chooseRound() {
         if (inputName.value !== "") {
             playerName = inputName.value;
             roundsToPlay = selection.value;
-            roundMenu.remove();
-            inputName.remove();
-            selection.remove();
-            startBtn.remove();
+            roundMenu.removeChild(inputName);
+            roundMenu.removeChild(selection);
+            roundMenu.removeChild(startBtn);
             window.onload = createBoard();
         } else {
             alert("Please fill in your player name.")
@@ -39,23 +38,26 @@ function chooseRound() {
     })
 }
 
+
+//Global variables and elements
 var pScore = 0;
 var cScore = 0;
 let roundEnded = false;
+const boardEl = document.getElementById("board");
+const span = document.querySelector("span");
+const result = document.createElement("div");
+const hr = document.createElement("hr");
+const menu = document.createElement("div");
+const playerScore = document.createElement("h2");
+const computerScore = document.createElement("h2");
+const round = document.createElement("h2");
 
 function createBoard() {
     // Creating the menu score board
-    const span = document.querySelector("span");
-    const result = document.createElement("div");
     result.id = "result";
-    const hr = document.createElement("hr");
-    const menu = document.createElement("div");
-    const playerScore = document.createElement("h2");
-    const computerScore = document.createElement("h2");
-    const round = document.createElement("h2");
-    playerScore.innerHTML = `${playerName}: ${pScore}`;
+    playerScore.innerHTML = `${playerName}: ${score.X}`;
     playerScore.id = "pScore";
-    computerScore.innerHTML = `Computer: ${cScore}`;
+    computerScore.innerHTML = `Computer: ${score.O}`;
     computerScore.id = "cScore";
     round.innerHTML = `Best out of ${roundsToPlay} Rounds!`;
     span.append(result, hr);
@@ -63,11 +65,11 @@ function createBoard() {
     menu.append(playerScore, computerScore, round);
 
     // Creating 3x3 tic tac toe board
-    const board = document.getElementById("board");
     for (let i = 0; i < 3; i++) {
         const row = document.createElement("div");
         row.className = "row";
-        board.appendChild(row);
+        row.id = `row${i}`;
+        boardEl.appendChild(row);
         for (let j = 0; j < 3; j++) {
             const box = document.createElement("div");
             box.className = "box";
@@ -105,8 +107,8 @@ function makeMove(row, col) {
             score[currentPlayer]++;
             gameOver = true;
             updateScore();
-            checkRoundEnded(score[currentPlayer]);
             resetBtn();
+            checkRoundEnded(score[currentPlayer]);
         } else if (isBoardFull()) {
             document.getElementById('result').textContent = "It's a draw!";
             gameOver = true;
@@ -120,13 +122,20 @@ function makeMove(row, col) {
     }
 
 }
+const reset = document.createElement('button');
 function resetBtn() {
-    const span = document.querySelector('span');
-    const reset = document.createElement('button');
     reset.setAttribute("onclick", "resetGame()");
     reset.id = "resetBtn";
     reset.textContent = "Play Again";
     span.append(reset);
+}
+
+function resetBoard(currentBoard) {
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            currentBoard[i][j] = '';
+        }
+    }
 }
 
 function checkWinner(row, col) {
@@ -138,17 +147,51 @@ function checkWinner(row, col) {
     );
 }
 
+const restartBtn = document.createElement('button');
 function checkRoundEnded(checkScore) {
-    console.log(checkScore);
+    restartBtn.id = "restartBtn";
+    restartBtn.innerHTML = "Restart";
     if (roundsToPlay == checkScore) {
         if (score.X > score.O) {
             alert("Player Wins! Game Over");
         } else {
             alert("Computer Wins! Game Over");
         }
-        gameOver = true;
-        reset.remove();
+        span.append(restartBtn);
+        document.getElementById("resetBtn").disabled = true;
     }
+    restartBtn.addEventListener("click", function (event) {
+        // set values to initial
+        document.getElementById("resetBtn").disabled = false;
+        gameOver = false;
+        score.X = 0;
+        score.O = 0;
+        currentPlayer = player.value;
+        document.getElementById('result').textContent = '';
+        resetBoard(board);
+        setBackToSelection();
+        chooseRound();
+    });
+
+}
+
+function setBackToSelection() {
+    for (let i = 2; i >= 0; i--) {
+        const row = document.getElementById(`row${i}`);
+        for (let j = 2; j >= 0; j--) {
+            const box = document.getElementById(`cell${i}${j}`);
+            row.removeChild(box);
+        }
+        boardEl.removeChild(row);
+    }
+    span.removeChild(reset);
+    span.removeChild(restartBtn);
+    menu.removeChild(playerScore);
+    menu.removeChild(computerScore);
+    menu.removeChild(round);
+    hr.removeChild(menu);
+    span.removeChild(result);
+    span.removeChild(hr);
 }
 
 function checkLine(startRow, startCol, rowStep, colStep) {

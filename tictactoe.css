@@ -102,10 +102,9 @@ input,
     cursor: pointer;
 }
 
-#restartBtn,
-#helloworld {
-    background: gray;
-    color: black;
+#resetBtn {
+    background: rgb(28, 184, 28);
+    color: white;
 }
 
 select {
