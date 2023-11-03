@@ -49,6 +49,24 @@ h2 {
     color: red;
 }
 
+#cell00,
+#cell01,
+#cell02,
+#cell10,
+#cell11,
+#cell12,
+#cell20,
+#cell21,
+#cell22 {
+    font-size: 100px;
+}
+
+#result {
+    color: white;
+    font-size: 50px;
+    text-align: center;
+}
+
 #roundMenu {
     display: flex;
     align-items: center;
@@ -58,7 +76,8 @@ h2 {
 
 select,
 input,
-#startBtn {
+#startBtn,
+#resetBtn {
     appearance: none;
     border: 2;
     outline: 0;
@@ -72,11 +91,15 @@ input,
     margin-bottom: 2rem;
 }
 
+#resetBtn {
+    width: 100%;
+    cursor: pointer;
+}
+
 select {
     width: 333px;
     cursor: pointer;
 }
-
 
 option {
     color: white;
