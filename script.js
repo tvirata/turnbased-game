@@ -28,6 +28,7 @@ function chooseRound() {
       playerName = inputName.value;
       localStorage.setItem("playerName", playerName);
       roundsToPlay = selection.value;
+      localStorage.setItem("roundsToPlay", roundsToPlay);
       roundMenu.removeChild(inputName);
       roundMenu.removeChild(selection);
       roundMenu.removeChild(startBtn);
@@ -125,6 +126,7 @@ function makeMove(row, col) {
       }
     }
   }
+  localStorage.setItem("board", board); // save board after each move
 }
 const reset = document.createElement("button");
 function resetBtn() {
@@ -168,8 +170,8 @@ function checkRoundEnded(checkScore) {
     // set values to initial
     document.getElementById("resetBtn").disabled = false;
     gameOver = false;
-    score.X = 0; // parseInt(localStorage.getItem("userScore")) || 0; // get user's score from local storage, if empty set to 0 // = 0;
-    score.O = 0; // parseInt(localStorage.getItem("compScore")) || 0; // get computers's score from local storage, if empty set to 0 // = 0;
+    score.X = 0;
+    score.O = 0;
     currentPlayer = player.value;
     document.getElementById("result").textContent = "";
     resetBoard(board);
@@ -221,9 +223,11 @@ function isBoardFull() {
 
 function updateScore() {
   document.getElementById("pScore").textContent = `${playerName}: ${score.X}`;
-  localStorage.setItem("userScore", pScore); // update player score in local storage
   document.getElementById("cScore").textContent = `Computer: ${score.O}`;
-  localStorage.setItem("compScore", cScore); // update computer score in local storage
+
+  // save scores to local storage
+  localStorage.setItem("playerScore", score.X);
+  localStorage.setItem("computerScore", score.O);
 }
 
 function resetGame() {
@@ -262,43 +266,33 @@ function computerMove() {
   }
 }
 
-/* Save game state */
-function saveGame() {
-  // save current game state into JSON elements
-  var state = {
-    userBoard: boardEl,
-    roundState: roundEnded,
-    userCurrRound: round,
-    userRounds: roundsToPlay,
-    userName: playerName,
-    saveScore: score,
-  };
-  if (localStorage) {
-    // if browser supports local storage
-    localStorage.setItem("saveState", JSON.stringify(state)); // save game as JSON in local storage
-  }
-}
-/* Load game state */
+/* Load game function */
 function loadGame() {
-  if (localStorage) {
-    // if browser supports local storage
-    var state = JSON.parse(localStorage.getItem("saveState")); // parse JSON elements from local storage
-    // update elements to saved items from local storage
-    boardEl = state.userBoard;
-    roundEnded = state.roundState;
-    round = state.userCurrRound;
-    roundsToPlay = state.userRounds;
-    playerName = state.userName;
-    score = state.saveScore;
-
-    createBoard(); // create new board using local storage data
+  if (localStorage.getItem("playerName")) {
+    // if playerName is in localStorage
+    playerName = localStorage.getItem("playerName"); // set current player name to saved player name
+    roundsToPlay = localStorage.getItem("roundsToPlay"); // set current rounds to play to saved rounds to play
+    if (playerName && roundsToPlay) {
+      // if there are values for player name AND rounds to play
+      var savedBoard = localStorage.getItem("board");
+      if (savedBoard) {
+        // if savedBoard is not null
+        // Loop through the saved board and assign the values to the current board
+        for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < 3; j++) {
+            board[i][j] = savedBoard[i][j];
+          }
+        }
+        createBoard(); // call createBoard function
+      }
+    } else {
+      // else if there are no values for player name and rounds to play
+      chooseRound(); // call round menu
+    }
   } else {
-    // else if local storage is not populated
-    chooseRound(); // go to round menu
+    // else if there is no playerName in localStorage
+    chooseRound(); // call round menu
   }
 }
 
-/* 
-  changed to loadGame() so it can apply localStorage logic
-*/
-window.onload = loadGame(); // chooseRound();
+window.onload = loadGame();
