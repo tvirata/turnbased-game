@@ -32,7 +32,7 @@ function chooseRound() {
       roundMenu.removeChild(inputName);
       roundMenu.removeChild(selection);
       roundMenu.removeChild(startBtn);
-      window.onload = createBoard();
+      createBoard();
     } else {
       alert("Please fill in your player name.");
       return;
@@ -80,6 +80,7 @@ function createBoard() {
     }
   }
 }
+
 const board = [
   ["", "", ""],
   ["", "", ""],
@@ -126,8 +127,8 @@ function makeMove(row, col) {
       }
     }
   }
-  localStorage.setItem("board", board); // save board after each move
 }
+
 const reset = document.createElement("button");
 function resetBtn() {
   reset.setAttribute("onclick", "resetGame()");
@@ -265,6 +266,9 @@ function computerMove() {
     }
   }
 }
+function saveGame() {
+  localStorage.setItem("board", board); // save board after each move
+}
 
 /* Load game function */
 function loadGame() {
@@ -284,6 +288,8 @@ function loadGame() {
           }
         }
         createBoard(); // call createBoard function
+      } else {
+        chooseRound();
       }
     } else {
       // else if there are no values for player name and rounds to play
